@@ -19,7 +19,7 @@ bool confirm(const std::string& message)
 Button::Button(const std::string& text)
 {
     state = IDLE;
-    innerText = new Text(text, 255, 255, 255, TEXT_FONT, NULL, 15, 0, 0);
+    innerText = new Text(text, TEXT_FONT, NULL, 15, 0, 0, 255, 255, 255);
     SDL_Rect _(innerText->get_rect());
     rect.w = _.w+20;
     rect.h = _.h+20;
@@ -126,7 +126,7 @@ void __button__::set_text(const std::string& t)
 Confirm::Confirm(const std::string& text): result(-1)
 {
     /* création des composants */
-    message = new Text(text, 255, 255, 255, TEXT_FONT, NULL, 15, 0, 0);
+    message = new Text(text, TEXT_FONT, NULL, 15, 0, 0, 255, 255, 255);
     ok = new Ok(this);
     cancel = new Cancel(this);
 

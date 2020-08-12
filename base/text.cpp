@@ -3,7 +3,7 @@
 #include "text.h"
 #include "func_tool.h"
 
-Text::Text(const std::string& content, int r, int g, int b, const std::string& font_name, SDL_Rect* _viewport, int char_size, int _x, int _y)
+Text::Text(const std::string& content, const std::string& font_name, SDL_Rect* _viewport, int char_size, int _x, int _y, int r, int g, int b, int a)
 {
     if (_viewport)
         viewport = _viewport;
@@ -29,6 +29,7 @@ Text::Text(const std::string& content, int r, int g, int b, const std::string& f
     color.r = r;
     color.g = g;
     color.b = b;
+    alpha = a;
     setFont(font_name, char_size);
     rect.w = image->w;
     rect.h = image->h;
@@ -63,7 +64,7 @@ void Text::set(SDL_Color _color, const std::string& content)
             height += images[i]->h;
         }
         SDL_FreeSurface(image);
-        image = SDL_CreateRGBSurface(SDL_HWSURFACE, max_w, height, 32, 0, 0, 0, 0);
+        image = SDL_CreateRGBSurface(SDL_HWSURFACE, max_w, height, 32, RMASK, GMASK, BMASK, AMASK);
         SDL_Rect pos = {0};
         for (int i=0; i<(int)images.size(); ++i)
         {
@@ -77,6 +78,7 @@ void Text::set(SDL_Color _color, const std::string& content)
         SDL_FreeSurface(image);
         image = TTF_RenderText_Solid(font, content.c_str(), color);
     }
+    SDL_SetAlpha(image, SDL_SRCALPHA, alpha);
 }
 
 void Text::setFont(const std::string& font_name, int textSize)

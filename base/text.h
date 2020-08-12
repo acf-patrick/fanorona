@@ -9,8 +9,8 @@
 class Text: public GameObject
 {
 public:
-    Text(const std::string& content, int r, int g, int b, const std::string& font_name,
-         SDL_Rect* _viewport, int char_size, int _x, int _y);
+    Text(const std::string& content, const std::string& font_name,
+         SDL_Rect* _viewport, int char_size, int _x, int _y, int r, int g, int b, int a = 255);
     virtual ~Text();
 
     void draw(SDL_Surface*);
@@ -24,6 +24,7 @@ protected:
     std::string text, fontName;
     SDL_Color color;
     TTF_Font* font;
+    Uint8 alpha;
 };
 
 #endif

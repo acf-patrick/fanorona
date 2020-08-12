@@ -33,7 +33,7 @@ const int Fps::DEFAULT(30);
 const int Fps::UPPER_LIMIT(200);
 
 Fps::Fps(Uint32 _rate, const std::string& font_name):
-    Text("FPS : ", 255, 0, 0, font_name, NULL, 10, -200, -50),
+    Text("FPS : ", font_name, NULL, 10, -200, -50, 255, 0, 0),
     rate(_rate)
 {
     int _x, _y;
