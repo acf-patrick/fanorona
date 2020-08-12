@@ -14,8 +14,6 @@ private:
   	void update();
   	void update_events();
 
-  	void draw_board();
-  	SDL_Surface* txt_fanorona;
     Group objects;
 };
 
