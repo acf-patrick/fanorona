@@ -10,9 +10,9 @@ int Piece::diameter(32);
 Piece::Piece(int _x, int _y, bool color) : r_x(_x), r_y(_y), state(IDLE)
 {
 	type.push_back("Piece");
-    image = SDL_CreateRGBSurface(SDL_HWSURFACE, diameter, diameter, 32, RMASK, GMASK, BMASK, AMASK);
-    shadow = SDL_CreateRGBSurface(SDL_HWSURFACE, diameter, diameter, 32, RMASK, GMASK, BMASK, AMASK);
-    light = SDL_CreateRGBSurface(SDL_HWSURFACE, diameter, diameter, 32, RMASK, GMASK, BMASK, AMASK);
+    image =  createSurface(diameter, diameter);
+    shadow = createSurface(diameter, diameter);
+    light = createSurface(diameter, diameter);
     if (!(image and shadow and light))
     {
 		std::cerr << "Erreur lors de la création d'un pion!";

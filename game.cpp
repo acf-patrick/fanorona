@@ -47,6 +47,7 @@ void Game::update()
 void Game::update_events()
 {
 	App::update_events();
+	if (keys[SDLK_r]) gen();
 
 	if (event.type == SDL_MOUSEBUTTONUP)
 	{
@@ -55,5 +56,4 @@ void Game::update_events()
 		if (piece)
 			piece->bump();
 	}
-	if (keys[SDLK_r]) gen();
 }

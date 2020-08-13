@@ -151,7 +151,9 @@ Confirm::Confirm(const std::string& text): result(-1)
 
     /* fond */
     image = createSurface(rect.w, rect.h);
-    roundedBoxColor(image, 0, 0, rect.w, rect.h, 10, 0xa8a8aa);
+    shadow = createSurface(rect.w, rect.h);
+    roundedBoxColor(image, 0, 0, rect.w, rect.h, 10, 0x808080ff);
+    roundedBoxColor(shadow, 0, 0, rect.w, rect.h, 10, 0x5e5e5e);
 
     /* convertion en coordonnées globales */
     ok->move(x, y);
@@ -173,6 +175,8 @@ void Confirm::update()
 }
 void Confirm::draw(SDL_Surface* screen)
 {
+    SDL_Rect pos = { Sint16(x+3), Sint16(y+5) };
+    SDL_BlitSurface(shadow, NULL, screen, &pos);
     GameObject::draw(screen);
     ok->draw(screen);
     cancel->draw(screen);

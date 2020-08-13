@@ -75,6 +75,7 @@ private:
         }
         Confirm *parent;
     };
+    SDL_Surface* shadow;
     Text *message;
     Button *ok, *cancel;
 };
