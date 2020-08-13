@@ -341,3 +341,6 @@ void apply_rotation(int cx, int cy, int angle, int* x, int *y)
     *x = cx + (_x-cx)*std::cos(alpha) - (_y-cy)*std::sin(alpha);
     *y = cy + (_x-cx)*std::sin(alpha) + (_y-cy)*std::cos(alpha);
 }
+
+Circle::Circle(int c_x, int c_y, int r) : center_x(c_x), center_y(c_y), radius(r)
+{}

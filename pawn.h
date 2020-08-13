@@ -16,14 +16,19 @@ public:
 
 	void draw(SDL_Surface*);
 	void update();
+	void bump(const std::string& flag = "");
 
 	static int diameter;
 	static SDL_Rect board_top_left;
 
 private:
+	enum { IDLE, MOVING, SELECTED };
+
 	/* relative coordinates */
 	int r_x, r_y;
-	SDL_Surface* shadow;
+
+	int state;
+	SDL_Surface *shadow, *light;
 };
 
 #endif

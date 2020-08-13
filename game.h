@@ -14,7 +14,9 @@ private:
   	void update();
   	void update_events();
 
-    Group objects;
+    Group other, pieces;
+    int board[3][3];
+    enum { BLACK, WHITE, BLANK };
 };
 
 #endif

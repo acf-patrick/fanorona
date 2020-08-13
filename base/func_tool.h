@@ -22,11 +22,13 @@
 
 int sgn(double);
 
-typedef struct
+struct Circle
 {
+    Circle(int, int, int);
+
     int center_x, center_y;
     int radius;
-}Circle;
+};
 
 SDL_Surface* black_n_white(SDL_Surface*);
 SDL_Surface* get_image(SDL_Surface*, Sint16 , Sint16, Uint16, Uint16);
