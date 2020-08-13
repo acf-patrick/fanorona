@@ -3,6 +3,7 @@
 #include "base/func_tool.h"
 #include <SDL_gfxPrimitives.h>
 
+Piece* Piece::last_selected(NULL);
 SDL_Rect Piece::board_top_left;
 int Piece::diameter(32);
 
@@ -51,5 +52,20 @@ void Piece::draw(SDL_Surface* screen)
 
 void Piece::bump(const std::string& flag)
 {
-    state = SELECTED;
+	state = SELECTED;
+	last_selected = this;
+}
+
+void Piece::unselect()
+{
+	if (selected())
+		last_selected->state = IDLE;
+}
+
+bool Piece::selected()
+{ return last_selected; }
+
+void Piece::move(int horizontal, int vertical)
+{
+
 }

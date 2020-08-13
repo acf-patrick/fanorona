@@ -99,8 +99,9 @@ void Group::remove(std::vector<GameObject*> sprite)
 
 void Group::clear()
 {
-    for (int i=0; i<(int)sprite_list.size(); ++i)
-        remove(sprite_list[i]);
+    std::vector<GameObject*> copy(sprite_list);
+    for (int i=0; i<(int)copy.size(); ++i)
+        remove(copy[i]);
 }
 
 std::vector<GameObject*> Group::sprites()

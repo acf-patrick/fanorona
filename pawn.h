@@ -15,9 +15,12 @@ public:
 	~Piece();
 
 	void draw(SDL_Surface*);
+	void move(int, int);
 	void update();
 	void bump(const std::string& flag = "");
 
+	static bool selected();
+	static void unselect();
 	static int diameter;
 	static SDL_Rect board_top_left;
 
@@ -29,6 +32,8 @@ private:
 
 	int state;
 	SDL_Surface *shadow, *light;
+
+	static Piece* last_selected;
 };
 
 #endif

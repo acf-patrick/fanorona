@@ -5,12 +5,20 @@
 #include "pawn.h"
 #include <ctime>
 
-Game::Game() : App("Fanorona", 800, 550)
+Game::Game() : App("Fanorona", 800, 550), turn(BLACK)
 {
+	srand(time(0));
+	gen();
+	other.add({ new Background,
+				new Text("fanorona", "Ubuntu-B", NULL, CHAR_SIZE, 18, 18, 170, 170, 170, 100),
+				new Text("fanorona", "Ubuntu-B", NULL, CHAR_SIZE, 15, 15, 255, 255, 255) });
+}
+
+void Game::gen()
+{
+	pieces.clear();
 	for (int k = 0; k < 9; ++k)
 		board[k/3][k%3] = BLANK;
-	srand(time(0));
-	other.add(new Background);
 	for (int i=0; i<2; ++i)
 		for (int j=0; j<3; ++j)
 		{
@@ -22,8 +30,6 @@ Game::Game() : App("Fanorona", 800, 550)
 			board[x][y] = i;
             pieces.add(new Piece(y, x, i));
 		}
-	other.add(new Text("fanorona", "Ubuntu-B", NULL, CHAR_SIZE, 18, 18, 170, 170, 170, 170));
-	other.add(new Text("fanorona", "Ubuntu-B", NULL, CHAR_SIZE, 15, 15, 255, 255, 255));
 }
 
 void Game::draw()
@@ -41,11 +47,13 @@ void Game::update()
 void Game::update_events()
 {
 	App::update_events();
+
 	if (event.type == SDL_MOUSEBUTTONUP)
 	{
-		GameObject* object = pieces.first_sprite_colliding_with(event.button.x, event.button.y);
-		if (object)
-			if (object->is("Piece"))
-				object->bump();
+		Piece::unselect();
+		GameObject* piece = pieces.first_sprite_colliding_with(event.button.x, event.button.y);
+		if (piece)
+			piece->bump();
 	}
+	if (keys[SDLK_r]) gen();
 }
