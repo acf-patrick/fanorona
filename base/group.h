@@ -18,7 +18,7 @@ public:
 
     /// Ajoute le sprite dans le groupe
     void add(GameObject*);
-    void add(std::vector<GameObject*>);
+    void add(const std::vector<GameObject*>&);
 
     /// Verifie si le groupe est vide
     bool empty();

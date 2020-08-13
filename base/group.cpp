@@ -43,7 +43,7 @@ void Group::add(GameObject* sprite)
 {
     _add(sprite);
 }
-void Group::add(std::vector<GameObject*> sprites)
+void Group::add(const std::vector<GameObject*>& sprites)
 {
     for (int i=0; i<(int)sprites.size(); ++i)
         _add(sprites[i]);
@@ -169,7 +169,7 @@ GameObject* Group::first_sprite_colliding_with(SDL_Rect rect)
 }
 GameObject* Group::first_sprite_colliding_with(int x, int y)
 {
-    SDL_Rect r = {Sint16(x), Sint16(y)};
+    SDL_Rect r = {Sint16(x), Sint16(y), 1, 1};
     return first_sprite_colliding_with(r);
 }
 

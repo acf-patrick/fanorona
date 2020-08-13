@@ -18,22 +18,26 @@ public:
 	void move(int, int);
 	void update();
 	void bump(const std::string& flag = "");
+	int get_x() const;
+	int get_y() const;
 
-	static bool selected();
 	static void unselect();
+
+	static Piece* selected;
 	static int diameter;
 	static SDL_Rect board_top_left;
+	static int** board;
 
 private:
 	enum { IDLE, MOVING, SELECTED };
 
 	/* relative coordinates */
-	int r_x, r_y;
+	int r_x, r_y, d_x, d_y;
 
 	int state;
 	SDL_Surface *shadow, *light;
 
-	static Piece* last_selected;
+	bool valid(int, int);
 };
 
 #endif

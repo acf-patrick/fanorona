@@ -42,13 +42,13 @@ public:
     /// group->add(sprite)
     void remember(Group*);
 
-    int get_x();
-    int get_y();
-    int get_right();
-    int get_bottom();
-    int get_centerx();
-    int get_centery();
-    SDL_Rect get_rect();
+    virtual int get_x() const;
+    virtual int get_y() const;
+    virtual int get_right() const;
+    virtual int get_bottom() const;
+    virtual int get_centerx() const;
+    virtual int get_centery() const;
+    virtual SDL_Rect get_rect() const;
     /// Retourne la force qu'éxerce ce sprite sur un autre
     /// sous forme de tableau à deux cases :
     /// suivant 'x' et suivant 'y'

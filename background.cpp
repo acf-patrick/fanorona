@@ -1,5 +1,6 @@
 #include "background.h"
 #include "base/app.h"
+#include "base/func_tool.h"
 #include "const.h"
 #include <SDL.h>
 #include <SDL_gfxPrimitives.h>

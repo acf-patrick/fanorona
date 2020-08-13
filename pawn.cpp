@@ -2,14 +2,16 @@
 #include "const.h"
 #include "base/func_tool.h"
 #include <SDL_gfxPrimitives.h>
+#include <cmath>
 
-Piece* Piece::last_selected(NULL);
+Piece* Piece::selected(NULL);
 SDL_Rect Piece::board_top_left;
 int Piece::diameter(32);
+int** Piece::board(NULL);
 
 Piece::Piece(int _x, int _y, bool color) : r_x(_x), r_y(_y), state(IDLE)
 {
-	type.push_back("Piece");
+	rect.w = rect.h = diameter;
     image =  createSurface(diameter, diameter);
     shadow = createSurface(diameter, diameter);
     light = createSurface(diameter, diameter);
@@ -33,8 +35,8 @@ Piece::~Piece()
 
 void Piece::update()
 {
-	x = r_x*0.5*board_top_left.w - 0.5*diameter + board_top_left.x;
-	y = r_y*0.5*board_top_left.h - 0.5*diameter + board_top_left.y;
+	x = r_y*0.5*board_top_left.w - 0.5*diameter + board_top_left.x;
+	y = r_x*0.5*board_top_left.h - 0.5*diameter + board_top_left.y;
 }
 
 void Piece::draw(SDL_Surface* screen)
@@ -53,19 +55,41 @@ void Piece::draw(SDL_Surface* screen)
 void Piece::bump(const std::string& flag)
 {
 	state = SELECTED;
-	last_selected = this;
+	selected = this;
 }
 
 void Piece::unselect()
 {
-	if (selected())
-		last_selected->state = IDLE;
+	selected = NULL;
 }
 
-bool Piece::selected()
-{ return last_selected; }
-
-void Piece::move(int horizontal, int vertical)
+void Piece::move(int xDest, int yDest)
 {
-
+	if (valid(xDest, yDest))
+	{
+		state = MOVING;
+		unselect();
+		std::swap(board[r_x][r_y], board[xDest][yDest]);
+		r_x = d_x = xDest;
+		r_y = d_y = yDest;
+	}
 }
+
+float dist(int x1, int y1, int x2, int y2)
+{ return std::sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1)); }
+bool Piece::valid(int xDest, int yDest)
+{
+    if (xDest < 0 or yDest < 0 or xDest >= 3 or yDest >= 3)
+		return false;
+	if (board[xDest][yDest] == black or board[xDest][yDest] == white)
+		return false;
+	float d(dist(r_x, r_y, xDest, yDest));
+    if (1>d or d>std::sqrt(2))
+		return false;
+	return true;
+}
+
+int Piece::get_x() const
+{ return r_x; }
+int Piece::get_y() const
+{ return r_y; }

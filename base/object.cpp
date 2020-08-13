@@ -41,12 +41,12 @@ GameObject::~GameObject()
     image = NULL;
 }
 
-int GameObject::get_x() { return x; }
-int GameObject::get_y() { return y; }
-int GameObject::get_centerx() { return x+rect.w/2.; }
-int GameObject::get_centery() { return y+rect.h/2.; }
-int GameObject::get_right() { return x+rect.w; }
-int GameObject::get_bottom() { return y+rect.h; }
+int GameObject::get_x() const { return x; }
+int GameObject::get_y() const { return y; }
+int GameObject::get_centerx() const { return x+rect.w/2.; }
+int GameObject::get_centery() const { return y+rect.h/2.; }
+int GameObject::get_right() const { return x+rect.w; }
+int GameObject::get_bottom() const { return y+rect.h; }
 float *GameObject::get_impulse()
 {
     float *ret = (float*)malloc(2*sizeof (float));
@@ -54,7 +54,7 @@ float *GameObject::get_impulse()
     return ret;
 }
 SDL_Surface* GameObject::get_surface() { return image; }
-SDL_Rect GameObject::get_rect()
+SDL_Rect GameObject::get_rect() const
 {
     SDL_Rect r = {Sint16(x), Sint16(y), rect.w, rect.h};
     return r;
