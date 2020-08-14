@@ -24,9 +24,8 @@ public:
 	static void unselect();
 
 	static Piece *selected, *moving;
-	static int diameter;
+	static int diameter, instance, *game_turn, **board;
 	static SDL_Rect board_top_left;
-	static int** board;
 
 private:
 	enum { IDLE, MOVING, SELECTED };

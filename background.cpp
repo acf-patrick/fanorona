@@ -20,7 +20,7 @@ Background::Background()
 
 	SDL_FillRect(image, NULL, BACKGROUND);
 
-	const int border_x(15), border_y(10), padding(25), thickness(3);
+	const int border_x(15), border_y(15), padding(25), thickness(3);
 	SDL_Rect front = { 0, 0 };
 	front.w = front.h = 10*Piece::diameter;
 	front.x = .5*(image->w - front.w);
@@ -34,9 +34,12 @@ Background::Background()
 	/* shadow */
 	filledPolygonColor(image, vx, vy, 5, BOARD_SHADOW);
 	/* border */
-    SDL_FillRect(image, &back, BOARD_BORDER);
+    // SDL_FillRect(image, &back, BOARD_BORDER);
+	boxColor(image, back.x, back.y, back.x+back.w, back.y+back.h, BOARD_BORDER);
+	filledPolygonColor(image, vx, vy, 5, BOARD_SHADOW);
     /* background */
-    SDL_FillRect(image, &front, WHITE);
+    roundedBoxColor(image, front.x, front.y, front.x+front.w, front.y+front.h, 10, 0xffffffff);
+    /*SDL_FillRect(image, &front, WHITE);*/
     /* lines */
     int cote = front.w - 2*padding;
     SDL_Rect top_left = { Sint16(front.x + padding), Sint16(front.y + padding) };

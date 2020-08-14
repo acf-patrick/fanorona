@@ -153,13 +153,11 @@ std::vector<GameObject*> Group::sprites_colliding_with(GameObject* sprite, bool 
 GameObject* Group::first_sprite_colliding_with(GameObject* sprite)
 {
     if (sprite)
-    {
         for (int i=0; i<(int)sprite_list.size(); ++i)
             if (sprite != sprite_list[i])
                 if (sprite_list[i]->collide_with(sprite) and
                     sprite->collide_with(sprite_list[i]))
                     return sprite_list[i];
-    }
     return NULL;
 }
 GameObject* Group::first_sprite_colliding_with(SDL_Rect rect)

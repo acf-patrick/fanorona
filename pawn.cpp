@@ -9,9 +9,12 @@ Piece* Piece::moving(NULL);
 SDL_Rect Piece::board_top_left;
 int Piece::diameter(32);
 int** Piece::board(NULL);
+int* Piece::game_turn(NULL);
+int Piece::instance(0);
 
-Piece::Piece(int _x, int _y, bool color) : r_x(_x), r_y(_y), state(IDLE), x_vel(0), y_vel(0), acceleration(-0.0255)
+Piece::Piece(int _x, int _y, bool color) : r_x(_x), r_y(_y), state(IDLE), x_vel(0), y_vel(0), acceleration(-0.045)
 {
+	instance++;
 	rect.w = rect.h = diameter;
     image =  createSurface(diameter, diameter);
     shadow = createSurface(diameter, diameter);
@@ -106,13 +109,14 @@ void Piece::move(int xDest, int yDest)
 {
 	if (valid(xDest, yDest))
 	{
+		(*game_turn) = !(*game_turn);
 		state = MOVING;
 		moving = this;
 		std::swap(board[r_x][r_y], board[xDest][yDest]);
 		d_x = xDest;
 		d_y = yDest;
-		x_vel = 3*sgn(d_y - r_y);
-		y_vel = 3*sgn(d_x - r_x);
+		x_vel = 3.5*sgn(d_y - r_y);
+		y_vel = 3.5*sgn(d_x - r_x);
 	}
 	else
 		state = IDLE;
