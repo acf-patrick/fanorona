@@ -1,6 +1,6 @@
 #include "game.h"
 #include "const.h"
-#include "base/text.h"
+#include "text.h"
 #include "background.h"
 #include "pawn.h"
 #include <ctime>
@@ -14,9 +14,7 @@ Game::Game() : App("Fanorona", 800, 550), turn(black)
 	gen();
 	Piece::board = board;
 	Piece::game_turn = &turn;
-	other.add({ new Background,
-				new Text("fanorona", "Ubuntu-B", NULL, CHAR_SIZE, 18, 20, 87, 87, 87, 100),
-				new Text("fanorona", "Ubuntu-B", NULL, CHAR_SIZE, 15, 15, 255, 255, 255) });
+	other.add({ new Background, new ShadowedText("fanorona", 15, 15, 255, 255, 255) });
     for (int i=0; i<9; ++i)
 	{
 		GameObject* piece(new Piece (i/3, i%3, 0));
