@@ -14,7 +14,7 @@ Game::Game() : App("Fanorona", 800, 550), turn(BLACK)
 	gen();
 	Piece::board = board;
 	other.add({ new Background,
-				new Text("fanorona", "Ubuntu-B", NULL, CHAR_SIZE, 18, 18, 87, 87, 87, 100),
+				new Text("fanorona", "Ubuntu-B", NULL, CHAR_SIZE, 18, 20, 87, 87, 87, 100),
 				new Text("fanorona", "Ubuntu-B", NULL, CHAR_SIZE, 15, 15, 255, 255, 255) });
     for (int i=0; i<9; ++i)
 	{
@@ -58,6 +58,16 @@ void Game::update_events()
 {
 	App::update_events();
 	if (keys[SDLK_r]) gen();
+	if (keys[SDLK_b])
+	{
+        for (int i=0; i<3; ++i)
+		{
+			for (int j=0; j<3; ++j)
+				std::cout << board[i][j] << '\t';
+			std::cout << std::endl;
+		}
+		std::cout << std::endl;
+	}
 
 	if (event.type == SDL_MOUSEBUTTONUP)
 	{
@@ -68,9 +78,10 @@ void Game::update_events()
 			if (collider)
 				Piece::selected->move(collider->get_x(), collider->get_y());
 			else
-				Piece::unselect();
+				Piece::selected->bump("unselect");
+			Piece::unselect();
 		}
-		else
+		else if (!Piece::moving)
 		{
 			GameObject* piece = pieces.first_sprite_colliding_with(b_x, b_y);
 			if (piece)

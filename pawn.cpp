@@ -5,11 +5,12 @@
 #include <cmath>
 
 Piece* Piece::selected(NULL);
+Piece* Piece::moving(NULL);
 SDL_Rect Piece::board_top_left;
 int Piece::diameter(32);
 int** Piece::board(NULL);
 
-Piece::Piece(int _x, int _y, bool color) : r_x(_x), r_y(_y), state(IDLE)
+Piece::Piece(int _x, int _y, bool color) : r_x(_x), r_y(_y), state(IDLE), x_vel(0), y_vel(0), acceleration(-0.0255)
 {
 	rect.w = rect.h = diameter;
     image =  createSurface(diameter, diameter);
@@ -21,8 +22,8 @@ Piece::Piece(int _x, int _y, bool color) : r_x(_x), r_y(_y), state(IDLE)
 		exit(EXIT_FAILURE);
     }
 
-    filledCircleColor(shadow, 0.5*diameter, 0.5*diameter, 0.5*diameter, PAWN_SHADOW);
     filledCircleColor(light, 0.5*diameter, 0.5*diameter, 0.5*diameter,0x5a74a946);
+    filledCircleColor(shadow, 0.5*diameter, 0.5*diameter, 0.5*diameter, PAWN_SHADOW);
     filledCircleColor(image, 0.5*diameter, 0.5*diameter, 0.5*diameter, color?WHITE_PAWN:BLACK_PAWN);
     circleColor(image, 0.5*diameter, 0.5*diameter, 0.5*diameter, 0xeeeeee55);
 }
@@ -33,10 +34,43 @@ Piece::~Piece()
 	shadow = NULL;
 }
 
+float dist(int x1, int y1, int x2, int y2)
+{ return std::sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1)); }
 void Piece::update()
 {
-	x = r_y*0.5*board_top_left.w - 0.5*diameter + board_top_left.x;
-	y = r_x*0.5*board_top_left.h - 0.5*diameter + board_top_left.y;
+	if (state == MOVING)
+	{
+		SDL_Rect r(get_SDL_coord(d_x, d_y));
+		/* can't get higher precision than this */
+		if (dist(std::ceil(x), std::ceil(y), r.x, r.y) > 2)
+		{
+            x += x_vel;
+            y += y_vel;
+            x_vel += acceleration*sgn(x_vel);
+            y_vel += acceleration*sgn(y_vel);
+		}
+		else
+		{
+			x_vel = y_vel = 0;
+			r_x = d_x;
+			r_y = d_y;
+			state = IDLE;
+			moving = NULL;
+		}
+	}
+	else
+	{
+		SDL_Rect r(get_SDL_coord(r_x, r_y));
+		x = r.x;
+		y = r.y;
+	}
+}
+
+SDL_Rect Piece::get_SDL_coord(int rx, int ry)
+{
+	SDL_Rect ret = { Sint16(ry*0.5*board_top_left.w - 0.5*diameter + board_top_left.x),
+					Sint16(rx*0.5*board_top_left.h - 0.5*diameter + board_top_left.y) };
+	return ret;
 }
 
 void Piece::draw(SDL_Surface* screen)
@@ -54,8 +88,13 @@ void Piece::draw(SDL_Surface* screen)
 
 void Piece::bump(const std::string& flag)
 {
-	state = SELECTED;
-	selected = this;
+	if (flag == "unselect")
+		state = IDLE;
+	else
+	{
+		state = SELECTED;
+		selected = this;
+	}
 }
 
 void Piece::unselect()
@@ -68,15 +107,17 @@ void Piece::move(int xDest, int yDest)
 	if (valid(xDest, yDest))
 	{
 		state = MOVING;
-		unselect();
+		moving = this;
 		std::swap(board[r_x][r_y], board[xDest][yDest]);
-		r_x = d_x = xDest;
-		r_y = d_y = yDest;
+		d_x = xDest;
+		d_y = yDest;
+		x_vel = 3*sgn(d_y - r_y);
+		y_vel = 3*sgn(d_x - r_x);
 	}
+	else
+		state = IDLE;
 }
 
-float dist(int x1, int y1, int x2, int y2)
-{ return std::sqrt((x2-x1)*(x2-x1) + (y2-y1)*(y2-y1)); }
 bool Piece::valid(int xDest, int yDest)
 {
     if (xDest < 0 or yDest < 0 or xDest >= 3 or yDest >= 3)
@@ -86,6 +127,9 @@ bool Piece::valid(int xDest, int yDest)
 	float d(dist(r_x, r_y, xDest, yDest));
     if (1>d or d>std::sqrt(2))
 		return false;
+	/* diagonal move */
+	if (sgn(xDest - r_x) and sgn(yDest - r_y))
+        return r_x%2 == r_y%2;
 	return true;
 }
 

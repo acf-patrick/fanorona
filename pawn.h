@@ -23,7 +23,7 @@ public:
 
 	static void unselect();
 
-	static Piece* selected;
+	static Piece *selected, *moving;
 	static int diameter;
 	static SDL_Rect board_top_left;
 	static int** board;
@@ -37,6 +37,9 @@ private:
 	int state;
 	SDL_Surface *shadow, *light;
 
+	float x_vel, y_vel, acceleration;
+
+	SDL_Rect get_SDL_coord(int, int);
 	bool valid(int, int);
 };
 
