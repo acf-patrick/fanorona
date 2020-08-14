@@ -10,7 +10,6 @@ Background::Background()
 {
 	int sw, sh;
 	App::instance->window_size(&sw, &sh);
-	App::instance->window_size(&sw, &sh);
 	image = SDL_CreateRGBSurface(SDL_HWSURFACE, sw, sh, 32, 0, 0, 0, 0);
 	if (!image)
 	{

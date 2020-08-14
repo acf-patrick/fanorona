@@ -34,7 +34,7 @@ private:
 	int r_x, r_y, d_x, d_y;
 
 	int state;
-	SDL_Surface *shadow, *light;
+	SDL_Surface *shadow, *light, *zoom;
 
 	float x_vel, y_vel, acceleration;
 

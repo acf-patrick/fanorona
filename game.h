@@ -3,6 +3,7 @@
 
 #include "base/app.h"
 #include "base/group.h"
+#include "ia.h"
 
 class Game : public App
 {
@@ -13,8 +14,10 @@ private:
 	void draw();
   	void update();
   	void update_events();
+  	int winner();
 
-  	void gen();
+  	AI player;
+
     Group other, pieces, colliders;
     int **board, turn;
     enum { black, white, BLANK };
