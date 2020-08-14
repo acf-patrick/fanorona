@@ -12,7 +12,7 @@ int** Piece::board(NULL);
 int* Piece::game_turn(NULL);
 int Piece::instance(0);
 
-Piece::Piece(int _x, int _y, bool color) : r_x(_x), r_y(_y), state(IDLE), x_vel(0), y_vel(0), acceleration(-0.045)
+Piece::Piece(int _x, int _y, bool color) : r_x(_x), r_y(_y), state(IDLE), x_vel(0), y_vel(0), acceleration(-0.015)
 {
 	instance++;
 	rect.w = rect.h = diameter;
@@ -28,13 +28,17 @@ Piece::Piece(int _x, int _y, bool color) : r_x(_x), r_y(_y), state(IDLE), x_vel(
     filledCircleColor(light, 0.5*diameter, 0.5*diameter, 0.5*diameter,0x5a74a946);
     filledCircleColor(shadow, 0.5*diameter, 0.5*diameter, 0.5*diameter, PAWN_SHADOW);
     filledCircleColor(image, 0.5*diameter, 0.5*diameter, 0.5*diameter, color?WHITE_PAWN:BLACK_PAWN);
+    zoom = createSurface(diameter+2, diameter+2);
+    filledCircleColor(zoom, 0.5*zoom->w, 0.5*zoom->w, 0.5*zoom->w, color?WHITE_PAWN:BLACK_PAWN);
     circleColor(image, 0.5*diameter, 0.5*diameter, 0.5*diameter, 0xeeeeee55);
 }
 
 Piece::~Piece()
 {
 	SDL_FreeSurface(shadow);
-	shadow = NULL;
+	SDL_FreeSurface(light);
+	SDL_FreeSurface(zoom);
+	zoom = shadow = light = NULL;
 }
 
 float dist(int x1, int y1, int x2, int y2)
@@ -80,7 +84,11 @@ void Piece::draw(SDL_Surface* screen)
 {
     SDL_Rect pos = { Sint16(x+5), Sint16(y+5) };
     SDL_BlitSurface(shadow, NULL, screen, &pos);
+	SDL_Surface* tmp(image);
+	if (state == MOVING)
+		image = zoom;
     GameObject::draw(screen);
+    image = tmp;
     if (state == SELECTED)
     {
 		pos.x = Sint16(x);
@@ -107,19 +115,22 @@ void Piece::unselect()
 
 void Piece::move(int xDest, int yDest)
 {
-	if (valid(xDest, yDest))
+	if (state != MOVING)
 	{
-		(*game_turn) = !(*game_turn);
-		state = MOVING;
-		moving = this;
-		std::swap(board[r_x][r_y], board[xDest][yDest]);
-		d_x = xDest;
-		d_y = yDest;
-		x_vel = 3.5*sgn(d_y - r_y);
-		y_vel = 3.5*sgn(d_x - r_x);
+		if (valid(xDest, yDest))
+		{
+			(*game_turn) = !(*game_turn);
+			state = MOVING;
+			moving = this;
+			std::swap(board[r_x][r_y], board[xDest][yDest]);
+			d_x = xDest;
+			d_y = yDest;
+			x_vel = 2*sgn(d_y - r_y);
+			y_vel = 2*sgn(d_x - r_x);
+		}
+		else
+			state = IDLE;
 	}
-	else
-		state = IDLE;
 }
 
 bool Piece::valid(int xDest, int yDest)
