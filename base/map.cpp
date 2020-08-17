@@ -60,7 +60,6 @@ Map::Map(const std::string& map_file_name, SDL_Rect* viewport_rect):
                 SDL_Rect r = {
                     (Sint16)(j*tile_w), (Sint16)(i*tile_h),
                     (Uint16)tile_w, (Uint16)tile_h
-
                 };
                 sprite = new GameObject(r);
             }

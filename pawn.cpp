@@ -7,9 +7,9 @@
 Piece* Piece::selected(NULL);
 Piece* Piece::moving(NULL);
 SDL_Rect Piece::board_top_left;
-int Piece::diameter(32);
 int** Piece::board(NULL);
 int* Piece::game_turn(NULL);
+int Piece::diameter(32);
 int Piece::instance(0);
 
 Piece::Piece(int _x, int _y, bool color) : r_x(_x), r_y(_y), state(IDLE), x_vel(0), y_vel(0), acceleration(-0.015)
@@ -152,3 +152,6 @@ int Piece::get_x() const
 { return r_x; }
 int Piece::get_y() const
 { return r_y; }
+
+bool Piece::ready()
+{ return instance >= 15; }

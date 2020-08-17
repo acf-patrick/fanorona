@@ -2,6 +2,7 @@
 #define PAWN_H
 
 #include <SDL.h>
+#include <vector>
 #include "base/object.h"
 
 class Piece : public GameObject
@@ -22,9 +23,10 @@ public:
 	int get_y() const;
 
 	static void unselect();
+	static bool ready();
 
 	static Piece *selected, *moving;
-	static int diameter, instance, *game_turn, **board;
+	static int diameter, *game_turn, **board;
 	static SDL_Rect board_top_left;
 
 private:
@@ -37,6 +39,8 @@ private:
 	SDL_Surface *shadow, *light, *zoom;
 
 	float x_vel, y_vel, acceleration;
+
+	static int instance;
 
 	SDL_Rect get_SDL_coord(int, int);
 	bool valid(int, int);

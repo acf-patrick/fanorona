@@ -8,10 +8,10 @@
 Game::Game() : App("Fanorona", 800, 550), player(white), turn(black)
 {
 	srand(time(0));
-	board = (int**)malloc(3*sizeof (*board));
+	board = (int**)malloc(3*sizeof (int*));
 	for (int i=0; i<3; ++i)
 	{
-		board[i] = (int*)malloc(3*sizeof (**board));
+		board[i] = (int*)malloc(3*sizeof (int));
 		for (int j=0; j<3; ++j)
 			board[i][j] = BLANK;
 	}
@@ -55,25 +55,22 @@ void Game::update_events()
 
 	if (turn == player.color)
 	{
-        if (Piece::instance == 15)
-        {
-            goto get_in;
-            player.play();
-        }
+        if (Piece::ready())
+		{
+			if (!Piece::moving)
+				player.play();
+		}
 		else
 		{
-			Piece* piece(player.put());
-            board[piece->get_x()][piece->get_y()] = turn;
-            pieces.add(piece);
+            pieces.add(player.put());
 			turn = !turn;
 		}
 	}
 	else
-get_in:
 	if (event.type == SDL_MOUSEBUTTONUP)
 	{
 		int b_x(event.button.x), b_y(event.button.y);
-		if (Piece::instance == 15)
+		if (Piece::ready())
 		{
 			if (Piece::selected)
 			{
