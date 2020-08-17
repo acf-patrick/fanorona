@@ -56,7 +56,10 @@ void Game::update_events()
 	if (turn == player.color)
 	{
         if (Piece::instance == 15)
-			player.play();
+        {
+            goto get_in;
+            player.play();
+        }
 		else
 		{
 			Piece* piece(player.put());
@@ -66,6 +69,7 @@ void Game::update_events()
 		}
 	}
 	else
+get_in:
 	if (event.type == SDL_MOUSEBUTTONUP)
 	{
 		int b_x(event.button.x), b_y(event.button.y);
