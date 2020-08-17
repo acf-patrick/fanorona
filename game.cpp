@@ -29,6 +29,9 @@ Game::Game() : App("Fanorona", 800, 550), turn(black)
 
 void Game::init()
 {
+	for (auto obj : pieces.sprites())
+		delete obj;
+
 	pieces.clear();
 
     for (int i=0; i<3; ++i)

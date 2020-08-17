@@ -5,10 +5,7 @@
 AI::AI(int p_color, int depth) : color(p_color), m_depth(depth)
 {}
 AI::~AI()
-{
-	for (int i=0; i<3; ++i)
-		delete pieces[i];
-}
+{}
 
 void AI::play()
 {

@@ -37,6 +37,7 @@ Piece::Piece(int _x, int _y, bool color) : r_x(_x), r_y(_y), state(IDLE), x_vel(
 Piece::~Piece()
 {
 	instance--;
+	move_cnt[0] = move_cnt[1] = 0;
 	SDL_FreeSurface(shadow);
 	SDL_FreeSurface(light);
 	SDL_FreeSurface(zoom);
