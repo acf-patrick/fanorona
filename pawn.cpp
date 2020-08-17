@@ -11,8 +11,9 @@ int** Piece::board(NULL);
 int* Piece::game_turn(NULL);
 int Piece::diameter(32);
 int Piece::instance(0);
+int Piece::move_cnt[2] = { 0 };
 
-Piece::Piece(int _x, int _y, bool color) : r_x(_x), r_y(_y), state(IDLE), x_vel(0), y_vel(0), acceleration(-0.015)
+Piece::Piece(int _x, int _y, bool color) : r_x(_x), r_y(_y), state(IDLE), x_vel(0), y_vel(0), acceleration(-0.015), moved(false)
 {
 	instance++;
 	rect.w = rect.h = diameter;
@@ -35,6 +36,7 @@ Piece::Piece(int _x, int _y, bool color) : r_x(_x), r_y(_y), state(IDLE), x_vel(
 
 Piece::~Piece()
 {
+	instance--;
 	SDL_FreeSurface(shadow);
 	SDL_FreeSurface(light);
 	SDL_FreeSurface(zoom);
@@ -120,6 +122,11 @@ void Piece::move(int xDest, int yDest)
 		if (valid(xDest, yDest))
 		{
 			(*game_turn) = !(*game_turn);
+			if (!moved)
+			{
+				moved = true;
+				move_cnt[board[r_x][r_y]]++;
+			}
 			state = MOVING;
 			moving = this;
 			std::swap(board[r_x][r_y], board[xDest][yDest]);
@@ -155,3 +162,6 @@ int Piece::get_y() const
 
 bool Piece::ready()
 { return instance >= 15; }
+
+bool Piece::allMoved(int color)
+{ return ((color>=2)?false:(move_cnt[color] == 3)); }

@@ -5,7 +5,10 @@
 AI::AI(int p_color, int depth) : color(p_color), m_depth(depth)
 {}
 AI::~AI()
-{}
+{
+	for (int i=0; i<3; ++i)
+		delete pieces[i];
+}
 
 void AI::play()
 {
@@ -54,12 +57,12 @@ int AI::evaluate() const
 int AI::min(int depth) const
 {
 	if (depth == 0 or Game::winner() < 2)
-		return evaluate();
+		return depth+evaluate();
     bool first(true);
     int ret;
 	for (int x=0; x<3; ++x)
 		for (int y=0; y<3; ++y)
-			if (Piece::board[x][y] == color)
+			if (Piece::board[x][y] == !color)
 			{
 				std::vector< std::vector<int> > && available(valid_moves(x, y));
 				for (auto coord : available)
@@ -80,7 +83,7 @@ int AI::min(int depth) const
 int AI::max(int depth) const
 {
 	if (depth == 0 or Game::winner() < 2)
-		return evaluate();
+		return depth+evaluate();
     bool first(true);
     int ret;
 	for (int x=0; x<3; ++x)

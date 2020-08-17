@@ -22,6 +22,7 @@ public:
 	int get_x() const;
 	int get_y() const;
 
+	static bool allMoved(int);
 	static void unselect();
 	static bool ready();
 
@@ -40,7 +41,10 @@ private:
 
 	float x_vel, y_vel, acceleration;
 
+	bool moved;
+
 	static int instance;
+	static int move_cnt[2];
 
 	SDL_Rect get_SDL_coord(int, int);
 	bool valid(int, int);

@@ -12,7 +12,9 @@ public:
 	~Game();
 
   	static int winner();
+
 private:
+	void init();
 	void draw();
   	void update();
   	void update_events();
