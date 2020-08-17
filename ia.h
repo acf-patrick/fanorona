@@ -18,7 +18,7 @@ private:
 	std::vector<Piece*> pieces;
 
 	int m_depth;
-	std::vector< std::vector<int> > valid_moves(int, int);
+	std::vector< std::vector<int> > valid_moves(int, int) const;
 
 	int evaluate() const;
 	int min(int) const;

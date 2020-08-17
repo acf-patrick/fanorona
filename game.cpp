@@ -5,8 +5,11 @@
 #include "pawn.h"
 #include <ctime>
 
-Game::Game() : App("Fanorona", 800, 550), player(white), turn(black)
+Game::Game() : App("Fanorona", 800, 550), turn(black)
 {
+    player[black] = new AI(black);
+	player[white] = new AI(white);
+
 	srand(time(0));
 	board = (int**)malloc(3*sizeof (int*));
 	for (int i=0; i<3; ++i)
@@ -27,6 +30,12 @@ Game::Game() : App("Fanorona", 800, 550), player(white), turn(black)
 	}
 }
 
+Game::~Game()
+{
+	delete player[0];
+	delete player[1];
+}
+
 void Game::draw()
 {
 	other.draw(screen);
@@ -42,7 +51,7 @@ void Game::update()
 void Game::update_events()
 {
 	App::update_events();
-/*	if (keys[SDLK_b])
+	/*if (keys[SDLK_b])
 	{
         for (int i=0; i<3; ++i)
 		{
@@ -53,21 +62,8 @@ void Game::update_events()
 		std::cout << std::endl;
 	}*/
 
-	if (turn == player.color)
-	{
-        if (Piece::ready())
-		{
-			if (!Piece::moving)
-				player.play();
-		}
-		else
-		{
-            pieces.add(player.put());
-			turn = !turn;
-		}
-	}
-	else
 	if (event.type == SDL_MOUSEBUTTONUP)
+	if (!player[turn])
 	{
 		int b_x(event.button.x), b_y(event.button.y);
 		if (Piece::ready())
@@ -106,8 +102,26 @@ void Game::update_events()
 	}
 }
 
+void Game::manage_events()
+{
+	if (player[turn])
+	{
+        if (Piece::ready())
+		{
+			if (!Piece::moving)
+				player[turn]->play();
+		}
+		else
+		{
+            pieces.add(player[turn]->put());
+			turn = !turn;
+		}
+	}
+}
+
 int Game::winner()
 {
+	int** board(Piece::board);
     for (int k=0; k<3; ++k)
     {
 		if (board[k][0] != BLANK)

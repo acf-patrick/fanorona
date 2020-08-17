@@ -9,14 +9,16 @@ class Game : public App
 {
 public:
 	Game();
+	~Game();
 
+  	static int winner();
 private:
 	void draw();
   	void update();
   	void update_events();
-  	int winner();
+  	void manage_events();
 
-  	AI player;
+  	AI *player[2];
 
     Group other, pieces, colliders;
     int **board, turn;

@@ -1,4 +1,5 @@
 #include "ia.h"
+#include "game.h"
 #include <ctime>
 
 AI::AI(int p_color, int depth) : color(p_color), m_depth(depth)
@@ -30,7 +31,6 @@ void AI::play()
             std::swap(Piece::board[x][y], Piece::board[coord[0]][coord[1]]);
 		}
 	}
-
 	to_move->move(dest[0], dest[1]);
 }
 
@@ -48,20 +48,62 @@ Piece* AI::put()
 
 int AI::evaluate() const
 {
-    return 0;
+    return rand();
 }
 
 int AI::min(int depth) const
 {
-	return rand();
+	if (depth == 0 or Game::winner() < 2)
+		return evaluate();
+    bool first(true);
+    int ret;
+	for (int x=0; x<3; ++x)
+		for (int y=0; y<3; ++y)
+			if (Piece::board[x][y] == color)
+			{
+				std::vector< std::vector<int> > && available(valid_moves(x, y));
+				for (auto coord : available)
+				{
+					std::swap(Piece::board[x][y], Piece::board[coord[0]][coord[1]]);
+					int value(max(depth-1));
+					if (first or value < ret)
+					{
+						first = false;
+						ret = value;
+					}
+					std::swap(Piece::board[x][y], Piece::board[coord[0]][coord[1]]);
+				}
+			}
+	return ret;
 }
 
 int AI::max(int depth) const
 {
-	return 0;
+	if (depth == 0 or Game::winner() < 2)
+		return evaluate();
+    bool first(true);
+    int ret;
+	for (int x=0; x<3; ++x)
+		for (int y=0; y<3; ++y)
+			if (Piece::board[x][y] == color)
+			{
+				std::vector< std::vector<int> > && available(valid_moves(x, y));
+				for (auto coord : available)
+				{
+					std::swap(Piece::board[x][y], Piece::board[coord[0]][coord[1]]);
+					int value(min(depth-1));
+					if (first or value > ret)
+					{
+						first = false;
+						ret = value;
+					}
+					std::swap(Piece::board[x][y], Piece::board[coord[0]][coord[1]]);
+				}
+			}
+	return ret;
 }
 
-std::vector< std::vector<int> > AI::valid_moves(int r_x, int r_y)
+std::vector< std::vector<int> > AI::valid_moves(int r_x, int r_y) const
 {
     std::vector< std::vector<int> > ret;
     for (int x=r_x-1; x<=r_x+1; ++x)
