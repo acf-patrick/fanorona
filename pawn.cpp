@@ -120,7 +120,7 @@ void Piece::move(int xDest, int yDest)
 {
 	if (state != MOVING)
 	{
-		if (valid(xDest, yDest))
+		if (valid(r_x, r_y, xDest, yDest))
 		{
 			(*game_turn) = !(*game_turn);
 			if (!moved)
@@ -141,18 +141,18 @@ void Piece::move(int xDest, int yDest)
 	}
 }
 
-bool Piece::valid(int xDest, int yDest)
+bool Piece::valid(int x0, int y0, int xDest, int yDest)
 {
-    if (xDest < 0 or yDest < 0 or xDest >= 3 or yDest >= 3)
+    if (xDest < 0 or yDest < 0 or xDest >= 3 or yDest >= 3 or (x0 == xDest and y0 == yDest))
 		return false;
 	if (board[xDest][yDest] == black or board[xDest][yDest] == white)
 		return false;
-	float d(dist(r_x, r_y, xDest, yDest));
+	float d(dist(x0, y0, xDest, yDest));
     if (1>d or d>std::sqrt(2))
 		return false;
 	/* diagonal move */
-	if (sgn(xDest - r_x) and sgn(yDest - r_y))
-        return r_x%2 == r_y%2;
+	if (sgn(xDest - x0) and sgn(yDest - y0))
+        return x0%2 == y0%2;
 	return true;
 }
 

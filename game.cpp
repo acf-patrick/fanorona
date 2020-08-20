@@ -4,11 +4,12 @@
 #include "background.h"
 #include "pawn.h"
 #include "base/widget.h"
+#include "base/timer.h"
 #include <ctime>
 
 Game::Game() : App("Fanorona", 800, 550), turn(black)
 {
-
+    player[0] = player[1] = NULL;
 	srand(time(0));
 	board = (int**)malloc(3*sizeof (int*));
 	for (int i=0; i<3; ++i)
@@ -17,6 +18,7 @@ Game::Game() : App("Fanorona", 800, 550), turn(black)
 	Piece::board = board;
 	Piece::game_turn = &turn;
 	other.add({ new Background, new ShadowedText("fanorona", 15, 15, 255, 255, 255) });
+	// other.add(new Fps(60, "Ubuntu-B"));
     for (int i=0; i<9; ++i)
 	{
 		GameObject* piece(new Piece (i/3, i%3, 0));
@@ -38,11 +40,12 @@ void Game::init()
 		for (int j=0; j<3; ++j)
 			board[i][j] = BLANK;
 
-	for (int i=0; i<2; ++i)
-	{
-		delete player[i];
-		player[i] = new AI(i);
-	}
+	for (int i=1; i<2; ++i)
+    {
+        if (player[i])
+            delete player[i];
+        player[i] = new AI(i);
+    }
 }
 
 Game::~Game()

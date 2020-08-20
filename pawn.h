@@ -21,6 +21,7 @@ public:
 	void bump(const std::string& flag = "");
 	int get_x() const;
 	int get_y() const;
+	static bool valid(int, int, int, int);
 
 	static bool allMoved(int);
 	static void unselect();
@@ -47,7 +48,6 @@ private:
 	static int move_cnt[2];
 
 	SDL_Rect get_SDL_coord(int, int);
-	bool valid(int, int);
 };
 
 #endif

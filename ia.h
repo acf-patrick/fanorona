@@ -7,7 +7,7 @@
 class AI
 {
 public:
-	AI(int, int depth = 4);
+	AI(int, int depth = 5);
 	~AI();
 	void play();
 	Piece* put();
@@ -18,9 +18,10 @@ private:
 	std::vector<Piece*> pieces;
 
 	int m_depth;
+	const int INF;
 	std::vector< std::vector<int> > valid_moves(int, int) const;
 
-	int evaluate() const;
+	int evaluate(int) const;
 	int min(int) const;
 	int max(int) const;
 };
