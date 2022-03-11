@@ -3,13 +3,11 @@
 
 #include "base/app.h"
 #include "base/group.h"
-#include "ia.h"
 
-class Game : public App
-{
+// Le jeu
+class Game : public App {
 public:
 	Game();
-	~Game();
 
   	static int winner();
 
@@ -17,10 +15,8 @@ private:
 	void init();
 	void draw();
   	void update();
-  	void update_events();
-  	void manage_events();
 
-  	AI *player[2];
+  	void update_events();
 
     Group other, pieces, colliders;
     int **board, turn;

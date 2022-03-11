@@ -1,7 +1,8 @@
 #ifndef TEXT
 #define TEXT
 
-#include <SDL.h>
+#include <string>
+#include <SDL/SDL.h>
 #include "base/group.h"
 #include "base/object.h"
 

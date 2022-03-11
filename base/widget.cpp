@@ -1,13 +1,11 @@
-#include <SDL_gfxPrimitives.h>
+#include <SDL/SDL_gfxPrimitives.h>
 #include "func_tool.h"
 #include "widget.h"
 
-bool confirm(const std::string& message)
-{
+bool confirm(const std::string& message) {
     SDL_Surface* screen(SDL_GetVideoSurface());
     Confirm widget(message);
-    while (widget.result < 0)
-    {
+    while (widget.result < 0) {
         SDL_PollEvent(App::instance->get_event());
         widget.update();
         widget.draw(screen);
@@ -16,8 +14,7 @@ bool confirm(const std::string& message)
     return widget.result;
 }
 
-Button::Button(const std::string& text)
-{
+Button::Button(const std::string& text) {
     state = IDLE;
     innerText = new Text(text, TEXT_FONT, NULL, 15, 0, 0, 255, 255, 255);
     SDL_Rect _(innerText->get_rect());
@@ -25,15 +22,13 @@ Button::Button(const std::string& text)
     rect.h = _.h+20;
     define_bg();
 }
-void Button::action()
-{
+
+void Button::action() {
     // override
 }
 
-__button__::~__button__()
-{
-    for (int i=0; i<3; ++i)
-    {
+__button__::~__button__() {
+    for (int i=0; i<3; ++i) {
         SDL_FreeSurface(background[i]);
         background[i] = NULL;
     }
@@ -41,52 +36,43 @@ __button__::~__button__()
     innerText = NULL;
 }
 
-void __button__::define_bg(SDL_Surface* hover, SDL_Surface* clicked, SDL_Surface* idle)
-{
+void __button__::define_bg(SDL_Surface* hover, SDL_Surface* clicked, SDL_Surface* idle) {
     if (idle)
         background[IDLE] = idle;
-    else
-    {
+    else {
         background[IDLE] = createSurface(rect.w, rect.h);
         roundedBoxColor(background[IDLE], 0, 0, rect.w, rect.h, 10, 0x262626ff);
     }
     if (hover)
         background[HOVER] = hover;
-    else
-    {
+    else {
         background[HOVER] = createSurface(rect.w, rect.h);
         roundedBoxColor(background[HOVER], 0, 0, rect.w, rect.h, 10, 0x464646ff);
     }
     if (clicked)
         background[CLICKED] = clicked;
-    else
-    {
+    else {
         background[CLICKED] = createSurface(rect.w, rect.h);
         roundedBoxColor(background[CLICKED], 0, 0, rect.w, rect.h, 10, 0x7c7c7cff);
     }
 }
 
-void __button__::draw(SDL_Surface* screen)
-{
+void __button__::draw(SDL_Surface* screen) {
     image = background[state];
     GameObject::draw(screen);
     image = NULL;
     innerText->draw(screen);
 }
 
-void __button__::update()
-{
+void __button__::update() {
     int bx, by;
     SDL_GetMouseState(&bx, &by);
     SDL_Event* event(App::instance->get_event());
-    if (collide_with(bx, by))
-    {
-        if (event->button.button == SDL_BUTTON_LEFT)
-        {
+    if (collide_with(bx, by)) {
+        if (event->button.button == SDL_BUTTON_LEFT) {
             if (event->type == SDL_MOUSEBUTTONDOWN)
                 state = CLICKED;
-            else
-            {
+            else {
                 if (event->type == SDL_MOUSEBUTTONUP)
                     if (state == CLICKED)
                         action();
@@ -100,14 +86,12 @@ void __button__::update()
     innerText->set_center(get_centerx(), get_centery());
 }
 
-void __button__::set_position(int _x, int _y)
-{
+void __button__::set_position(int _x, int _y) {
     GameObject::set_position(_x, _y);
     innerText->set_center(get_centerx(), get_centery());
 }
 
-void __button__::set_size(float e)
-{
+void __button__::set_size(float e) {
     innerText->setSize(e);
     SDL_Rect txtRect(innerText->get_rect());
     rect.w = txtRect.w+20;
@@ -116,21 +100,19 @@ void __button__::set_size(float e)
     define_bg();
 }
 
-void __button__::set_text(const std::string& t)
-{
+void __button__::set_text(const std::string& t) {
     SDL_Color white = {255, 255, 255};
     innerText->set(white, t);
     innerText->set_center(get_centerx(), get_centery());
 }
 
-Confirm::Confirm(const std::string& text): result(-1)
-{
-    /* création des composants */
+Confirm::Confirm(const std::string& text): result(-1) {
+/* crï¿½ation des composants */
     message = new Text(text, TEXT_FONT, NULL, 15, 0, 0, 255, 255, 255);
     ok = new Ok(this);
     cancel = new Cancel(this);
 
-    /* définition des tailles et de la position de l'objet */
+/* dï¿½finition des tailles et de la position de l'objet */
     SDL_Rect msg_rect(message->get_rect()), ok_rect(ok->get_rect());
     rect.w = 2*(ok_rect.w+20);
     int diff(0.5*(msg_rect.w-rect.w));
@@ -141,7 +123,7 @@ Confirm::Confirm(const std::string& text): result(-1)
     x = 0.5*(ww-rect.w);
     y = 0.5*(wh-rect.h);
 
-    /* mise en place des composants */
+/* mise en place des composants */
     ok->set_x(10);
     ok->set_bottom(rect.h-10);
     cancel->set_right(rect.w-10);
@@ -149,32 +131,31 @@ Confirm::Confirm(const std::string& text): result(-1)
     message->set_center(0.5*rect.w, message->get_centery());
     message->set_y(10);
 
-    /* fond */
+/* fond */
     image = createSurface(rect.w, rect.h);
     shadow = createSurface(rect.w, rect.h);
     roundedBoxColor(image, 0, 0, rect.w, rect.h, 10, 0x808080ff);
     roundedBoxColor(shadow, 0, 0, rect.w, rect.h, 10, 0x5e5e5e);
 
-    /* convertion en coordonnées globales */
+/* convertion en coordonnï¿½es globales */
     ok->move(x, y);
     cancel->move(x, y);
     message->move(x, y);
 }
 
-Confirm::~Confirm()
-{
+Confirm::~Confirm() {
     delete ok; ok = NULL;
     delete cancel; cancel = NULL;
     delete message; message = NULL;
 }
-void Confirm::update()
-{
+
+void Confirm::update() {
     ok->update();
     cancel->update();
     message->update();
 }
-void Confirm::draw(SDL_Surface* screen)
-{
+
+void Confirm::draw(SDL_Surface* screen) {
     SDL_Rect pos = { Sint16(x+3), Sint16(y+5) };
     SDL_BlitSurface(shadow, NULL, screen, &pos);
     GameObject::draw(screen);

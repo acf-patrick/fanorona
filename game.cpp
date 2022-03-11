@@ -1,15 +1,13 @@
 #include "game.h"
 #include "const.h"
-#include "text.h"
 #include "background.h"
+#include "shadowedText.h"
 #include "pawn.h"
 #include "base/widget.h"
 #include "base/timer.h"
 #include <ctime>
 
-Game::Game() : App("Fanorona", 800, 550), turn(black)
-{
-    player[0] = player[1] = NULL;
+Game::Game() : App("Fanorona", 800, 550), turn(black) {
 	srand(time(0));
 	board = (int**)malloc(3*sizeof (int*));
 	for (int i=0; i<3; ++i)
@@ -29,8 +27,7 @@ Game::Game() : App("Fanorona", 800, 550), turn(black)
 	init();
 }
 
-void Game::init()
-{
+void Game::init() {
 	for (auto obj : pieces.sprites())
 		delete obj;
 
@@ -39,34 +36,19 @@ void Game::init()
     for (int i=0; i<3; ++i)
 		for (int j=0; j<3; ++j)
 			board[i][j] = BLANK;
-
-	for (int i=1; i<2; ++i)
-    {
-        if (player[i])
-            delete player[i];
-        player[i] = new AI(i);
-    }
 }
 
-Game::~Game()
-{
-	delete player[0];
-	delete player[1];
-}
-
-void Game::draw()
-{
+void Game::draw() {
 	other.draw(screen);
 	pieces.draw(screen);
 }
 
-void Game::update()
-{
+void Game::update() {
 	other.update();
 	pieces.update();
+
 	int w(winner());
-	if (w != BLANK and !Piece::moving)
-	{
+	if (w != BLANK and !Piece::moving) {
 		std::string message("Les ");
 		message += w?"blancs":"noirs";
 		message += " ont gagnes\n Faire une autre partie ?";
@@ -75,30 +57,16 @@ void Game::update()
 		else
 			end();
 	}
+	SDL_Delay(5);
 }
 
-void Game::update_events()
-{
+void Game::update_events() {
 	App::update_events();
-	/*if (keys[SDLK_b])
-	{
-        for (int i=0; i<3; ++i)
-		{
-			for (int j=0; j<3; ++j)
-				std::cout << board[i][j] << '\t';
-			std::cout << std::endl;
-		}
-		std::cout << std::endl;
-	}*/
 
-	if (event.type == SDL_MOUSEBUTTONUP)
-	if (!player[turn])
-	{
+	if (event.type == SDL_MOUSEBUTTONUP) {
 		int b_x(event.button.x), b_y(event.button.y);
-		if (Piece::ready())
-		{
-			if (Piece::selected)
-			{
+		if (Piece::ready()) {
+			if (Piece::selected) {
 				GameObject* collider(colliders.first_sprite_colliding_with(b_x, b_y));
 				if (collider)
 					Piece::selected->move(collider->get_x(), collider->get_y());
@@ -106,22 +74,17 @@ void Game::update_events()
 					Piece::selected->bump("unselect");
 				Piece::unselect();
 			}
-			else if (!Piece::moving)
-			{
+			else if (!Piece::moving) {
 				GameObject* piece = pieces.first_sprite_colliding_with(b_x, b_y);
 				if (piece)
 					if (board[piece->get_x()][piece->get_y()] == turn)
 						piece->bump();
 			}
-		}
-		else
-		{
+		} else {
 			GameObject* collider(colliders.first_sprite_colliding_with(b_x, b_y));
-			if (collider)
-			{
+			if (collider) {
 				int i(collider->get_x()), j(collider->get_y());
-				if (board[i][j] == BLANK)
-				{
+				if (board[i][j] == BLANK) {
 					board[i][j] = turn;
 					pieces.add(new Piece(i, j, turn));
 					turn = !turn;
@@ -131,28 +94,9 @@ void Game::update_events()
 	}
 }
 
-void Game::manage_events()
-{
-	if (player[turn])
-	{
-        if (Piece::ready())
-		{
-			if (!Piece::moving)
-				player[turn]->play();
-		}
-		else
-		{
-            pieces.add(player[turn]->put());
-			turn = !turn;
-		}
-	}
-}
-
-int Game::winner()
-{
+int Game::winner() {
 	int** board(Piece::board);
-    for (int k=0; k<3; ++k)
-    {
+    for (int k=0; k<3; ++k) {
 		if (board[k][0] != BLANK)
 			if (board[k][0] == board[k][1] and board[k][0] == board[k][2] and Piece::allMoved(board[k][0]))
 				return board[k][0];

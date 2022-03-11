@@ -2,12 +2,11 @@
 #include "base/app.h"
 #include "base/func_tool.h"
 #include "const.h"
-#include <SDL.h>
-#include <SDL_gfxPrimitives.h>
+#include <SDL/SDL.h>
+#include <SDL/SDL_gfxPrimitives.h>
 #include "pawn.h"
 
-Background::Background()
-{
+Background::Background() {
 	int sw, sh;
 	App::instance->window_size(&sw, &sh);
 	image = SDL_CreateRGBSurface(SDL_HWSURFACE, sw, sh, 32, 0, 0, 0, 0);
@@ -26,20 +25,21 @@ Background::Background()
 	front.y = .5*(image->h - front.h);
     SDL_Rect back = { Sint16(front.x - border_x), Sint16(front.y - border_y), Uint16(front.w + 2*border_x), Uint16(front.h + 2*border_y) };
 
-    /* counter-clockwise */
+/* counter-clockwise */
     Sint16 vx[] = { Sint16(back.x), Sint16(back.x+image->h-(back.y+back.h)), Sint16(image->w), Sint16(image->w), Sint16(back.x+back.w) },
 		   vy[] = { Sint16(back.y+back.h), Sint16(image->h), Sint16(image->h), Sint16(back.y+image->w-(back.x+back.w)), Sint16(back.y) };
 
-	/* shadow */
+/* shadow */
 	filledPolygonColor(image, vx, vy, 5, BOARD_SHADOW);
-	/* border */
-    // SDL_FillRect(image, &back, BOARD_BORDER);
+
+/* border */
 	boxColor(image, back.x, back.y, back.x+back.w, back.y+back.h, BOARD_BORDER);
 	filledPolygonColor(image, vx, vy, 5, BOARD_SHADOW);
-    /* background */
+
+/* background */
     roundedBoxColor(image, front.x, front.y, front.x+front.w, front.y+front.h, 10, 0xffffffff);
-    /*SDL_FillRect(image, &front, WHITE);*/
-    /* lines */
+
+/* lines */
     int cote = front.w - 2*padding;
     SDL_Rect top_left = { Sint16(front.x + padding), Sint16(front.y + padding) };
     Piece::board_top_left.x = top_left.x;

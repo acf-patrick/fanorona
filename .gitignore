@@ -1,4 +1,1 @@
-bin
-obj
-fanorona\ SDL*
-
+*.o

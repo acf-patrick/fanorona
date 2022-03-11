@@ -1,8 +1,15 @@
+/**
+ * @file func_tool.h    
+ * @author acf-patrick (miharisoap@gmail.com)
+ * @brief fichier contenant fonctions utiles au programme
+ * 
+ */
+
 #ifndef FUNC_TOOL
 #define FUNC_TOOL
 
 #include <iostream>
-#include <SDL.h>
+#include <SDL/SDL.h>
 #include <string>
 #include <vector>
 

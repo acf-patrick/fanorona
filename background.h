@@ -3,8 +3,8 @@
 
 #include "base/object.h"
 
-class Background : public GameObject
-{
+// Arrière-plan du jeu
+class Background : public GameObject {
 public:
 	Background();
 };

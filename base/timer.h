@@ -1,12 +1,11 @@
 #ifndef TIMER_H
 #define TIMER_H
 
-#include <SDL.h>
-#include <SDL_framerate.h>
+#include <SDL/SDL.h>
+#include <SDL/SDL_framerate.h>
 #include "text.h"
 
-class Timer
-{
+class Timer {
 public:
     Timer();
     int get_elapsed_ms();
@@ -17,8 +16,7 @@ protected:
     int start_time;
 };
 
-class Chrono: public Timer
-{
+class Chrono: public Timer {
 public:
     /// @param Temps en secondes
     Chrono(int);
@@ -29,8 +27,8 @@ private:
     int remaining;
 };
 
-class Fps: public Text
-{
+// Pour ajuster le framerate du jeu
+class Fps: public Text {
 public:
     static const int DEFAULT;
     static const int UPPER_LIMIT;

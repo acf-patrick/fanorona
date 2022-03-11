@@ -1,16 +1,27 @@
-#ifndef WIDGET_H
-#define WIDGET_H
+/**
+ * @file widget.h
+ * @author acf-patrick (miharisoap@gmail.com)
+ * @brief Quelques widgets implémentés avec SDL 1.2
+ * 
+ */
+
+#pragma once
 
 #include "object.h"
 #include "text.h"
 #include "app.h"
-#include <SDL.h>
 
-#define TEXT_FONT "Ubuntu-B"
+#include <SDL/SDL.h>
+#include <string>
 
-// les fonctionnalit�s d'un boutton sont encapsul�s dans cette classe
-class __button__: public GameObject
-{
+const std::string TEXT_FONT = "Ubuntu-B";
+
+/**
+ * @brief Classe de base
+ * les fonctionnalités d'un boutton sont encapsulés dans cette classe
+ * 
+ */
+class __button__: public GameObject {
 public:
     virtual ~__button__();
     void set_position(int, int);
@@ -29,8 +40,7 @@ protected:
     virtual void action() = 0;
 };
 
-class Button: public __button__
-{
+class Button: public __button__ {
 public:
     Button(const std::string&);
 protected:
@@ -39,8 +49,7 @@ protected:
 
 bool confirm(const std::string&);
 
-class Confirm: public GameObject
-{
+class Confirm: public GameObject {
 public:
     Confirm(const std::string&);
     ~Confirm();
@@ -48,28 +57,27 @@ public:
     void update();
     int result;
 private:
-    class Ok: public Button
-    {
+
+// OK button
+    class Ok: public Button {
     public :
-        Ok(Confirm* c): Button("Annuler"), parent(c)
-        {
+        Ok(Confirm* c): Button("Annuler"), parent(c) {
             set_text("OK");
         }
     protected:
-        void action()
-        {
+        void action() {
             parent->result = true;
             parent->kill();
         }
         Confirm* parent;
     };
-    class Cancel: public Button
-    {
+
+// Cancel button
+    class Cancel: public Button {
     public:
         Cancel(Confirm* c): Button("Annuler"), parent(c) {}
     protected:
-        void action()
-        {
+        void action() {
             parent->result = false;
             parent->kill();
         }
@@ -79,17 +87,3 @@ private:
     Text *message;
     Button *ok, *cancel;
 };
-
-/*
-class TextArea: public GameObject
-{
-public:
-    TextArea(SDL_Rect);
-    void draw(SDL_Surface*);
-
-private:
-    Text* innerText;
-    SDL_Surface* background;
-};
-*/
-#endif // WIDGET_H

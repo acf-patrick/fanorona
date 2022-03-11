@@ -2,12 +2,12 @@
 #define TEXT_H
 
 #include <string>
-#include <SDL.h>
-#include <SDL_ttf.h>
+#include <SDL/SDL.h>
+#include <SDL/SDL_ttf.h>
 #include "object.h"
 
-class Text: public GameObject
-{
+// Text dans le jeu
+class Text: public GameObject {
 public:
     Text(const std::string& content, const std::string& font_name,
          SDL_Rect* _viewport, int char_size, int _x, int _y, int r, int g, int b, int a = 255);
@@ -20,10 +20,17 @@ public:
 
 protected:
 
+// Bounding box
     SDL_Rect* viewport;
-    std::string text, fontName;
+// Contenu
+    std::string text;
+// Nom de la police de caractères
+    std::string fontName;
+// Couleur du texte
     SDL_Color color;
+// Police utilisé
     TTF_Font* font;
+
     Uint8 alpha;
 };
 

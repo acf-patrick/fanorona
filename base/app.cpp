@@ -1,27 +1,27 @@
-#include <SDL.h>
-#include <SDL_ttf.h>
+#include <SDL/SDL.h>
+#include <SDL/SDL_ttf.h>
 #include "app.h"
-#include "func_tool.h"
 #include "widget.h"
 
 App* App::instance(NULL);
 
 SDL_Event* App::get_event() { return &event; }
-void App::window_size(int* w, int* h)
-{
+
+void App::window_size(int* w, int* h) {
     if (w) *w = screen->w;
     if (h) *h = screen->h;
 }
 
 App::App(std::string app_title, int w, int h):
-    paused(false), running(true)
-{
+    paused(false), running(true) {
     instance = this;
-
+// Initialisation du système
     SDL_Init(SDL_INIT_VIDEO);
+// Centrer la fenêtre de l'application
     char c[] = "SDL_VIDEO_CENTERED=1";
     SDL_putenv(c);
 
+// Création de la fenêtre pricnipale
     screen = SDL_SetVideoMode( w, h, 32, SDL_HWSURFACE | SDL_DOUBLEBUF );
     if (!screen)
     {
@@ -30,20 +30,19 @@ App::App(std::string app_title, int w, int h):
     }
     SDL_WM_SetCaption(app_title.c_str(), NULL);
 
+// Initialisation des touches du clavier
     for (int i=0; i<SDLK_LAST; ++i)
         keys[i] = false;
 }
 
-App::~App()
-{
+App::~App() {
     TTF_Quit();
     SDL_Quit();
 }
 
-void App::run()
-{
-    while (running)
-    {
+void App::run() {
+// Boucle principale
+    while (running) {
         while (SDL_PollEvent(&event))
             update_events();
         manage_events();
@@ -53,32 +52,27 @@ void App::run()
     }
 }
 
-void App::manage_events()
-{
+void App::manage_events() {
     //override
 }
 
-void App::update()
-{
+void App::update() {
     //override
 }
 
-void App::draw()
-{
+void App::draw() {
     //override
 }
 
-void App::update_events()
-{
-    switch(event.type)
-    {
+void App::update_events() {
+// Mise à jour des entrées
+    switch(event.type) {
     case SDL_QUIT:
         end();
         break;
     case SDL_KEYDOWN:
         keys[event.key.keysym.sym] = true;
-        if (keys[SDLK_ESCAPE])
-        {
+        if (keys[SDLK_ESCAPE]) {
             keys[SDLK_ESCAPE] = false;
             end();
         }
@@ -91,8 +85,8 @@ void App::update_events()
 }
 
 void App::pause() { paused = !paused; }
-void App::end()
-{
+void App::end() {
+// Demander l'utilisateur avant de quitter l'application
     if (confirm("Quitter?"))
         running = false;
 }
